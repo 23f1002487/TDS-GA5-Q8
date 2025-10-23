@@ -8,6 +8,10 @@ on:
   # Allow manual triggering for testing
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: read
+
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
