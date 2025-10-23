@@ -1,0 +1,70 @@
+name: Daily Commit Scheduler
+
+on:
+  schedule:
+    # Runs daily at 11:35 AM UTC (specific hours/minutes as required)
+    - cron: '35 11 * * *'
+  
+  # Allow manual triggering for testing
+  workflow_dispatch:
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
+    
+    - name: Configure Git for 23f1002487@ds.study.iitm.ac.in
+      run: |
+        git config --local user.email "23f1002487@ds.study.iitm.ac.in"
+        git config --local user.name "Automated Daily Commit"
+    
+    - name: Create daily commit entry
+      run: |
+        # Create or update a log file with today's date
+        DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        COMMIT_COUNT=$(git rev-list --count HEAD)
+        
+        # Create/update the daily log file
+        echo "Daily commit #$((COMMIT_COUNT + 1)) - $DATE" >> daily_commits.log
+        
+        # Create a simple timestamp file
+        echo "$DATE" > last_run.txt
+        
+        # Show what we're adding
+        echo "Adding daily commit entry:"
+        echo "Date: $DATE"
+        echo "Commit count will be: $((COMMIT_COUNT + 1))"
+    
+    - name: Commit and push changes for 23f1002487@ds.study.iitm.ac.in
+      run: |
+        # Add the files
+        git add daily_commits.log last_run.txt
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+          exit 0
+        fi
+        
+        # Create commit with timestamp
+        DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        git commit -m "Automated daily commit - $DATE"
+        
+        # Push changes
+        git push
+        
+        echo "Successfully created and pushed daily commit"
+    
+    - name: Verify commit creation
+      run: |
+        echo "Latest commit:"
+        git log -1 --oneline
+        echo ""
+        echo "Repository status after commit:"
+        git status
