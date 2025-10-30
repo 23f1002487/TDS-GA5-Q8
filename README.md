@@ -2,6 +2,8 @@
 
 This repository contains a scheduled GitHub Action that automatically creates daily commits.
 
+[![Daily Commit Scheduler](https://github.com/23f1002487/TDS-GA5-Q8/actions/workflows/daily-commit.yml/badge.svg)](https://github.com/23f1002487/TDS-GA5-Q8/actions/workflows/daily-commit.yml)
+
 ## Workflow Details
 
 - **Schedule**: Runs daily at 11:15 AM UTC using cron syntax `15 11 * * *`
